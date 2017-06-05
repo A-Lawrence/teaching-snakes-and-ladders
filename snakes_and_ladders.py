@@ -1,6 +1,9 @@
-# Version 2
+# Version 3
 # This version builds on the last:
-# - makes a player move back the number of positions rolled if a double
+# - displays the messages below when the condition for display is met
+# - - Start Game Message
+# - - A message when a 'double' is rolled
+# - - Win message when the game is finished and has been won
 
 import random
 
@@ -33,6 +36,20 @@ def advancePlayer(player, moves):
 
     players[player] = newSpace
 
+def whoWon():
+    if players[1] >= 49:
+        return 1
+
+    if players[2] >= 49:
+        return 2
+
+    return 0
+
+print("=====================================")
+print("Welcome to the Snakes & Ladders game!")
+print("=====================================")
+print("\n\n")
+
 while players[1] < 49 and players[2] < 49:
     print("Player %d it's your turn!" % (turn))
     print("Your current position is %d" % (players[turn]))
@@ -42,6 +59,7 @@ while players[1] < 49 and players[2] < 49:
     total = sum(roll)
 
     if isDouble(roll):
+        print("You rolled a double, bad luck!")
         total *= -1
 
     print("Die A: %d, Die B: %d, Total = %d" % (roll[0], roll[1], total))
@@ -54,4 +72,6 @@ while players[1] < 49 and players[2] < 49:
 
     print("")
 
-input("End Of Game")
+print("=================================")
+print("WINNER!!! Player %d won the game!" % (whoWon()))
+print("=================================")
