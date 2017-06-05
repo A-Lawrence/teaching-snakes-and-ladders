@@ -1,16 +1,17 @@
-# Version 1
-# This version gets us started with the NEA:
-# - allows 2 players to play the game
-# - allows the players to take turns two 6 sided dice and move
-# - displays the result of the move (not visually)
+# Version 2
+# This version builds on the last:
+# - makes a player move back the number of positions rolled if a double
 
 import random
 
-players = { 1 : 0, 2 : 0 }
+players = { 1 : 1, 2 : 1 }
 turn = 1
 
 def rollDice():
     return (random.randint(1, 6), random.randint(1, 6))
+
+def isDouble(roll):
+    return roll[0] == roll[1]
 
 def nextTurn():
     global turn
@@ -25,7 +26,12 @@ def advancePlayer(player, moves):
     
     newSpace = players[player] + moves
 
-    players[player] = min([newSpace, 49])
+    if newSpace < 1:
+        newSpace = 1
+    elif newSpace > 49:
+        newSpace = 49
+
+    players[player] = newSpace
 
 while players[1] < 49 and players[2] < 49:
     print("Player %d it's your turn!" % (turn))
@@ -34,6 +40,9 @@ while players[1] < 49 and players[2] < 49:
 
     roll = rollDice()
     total = sum(roll)
+
+    if isDouble(roll):
+        total *= -1
 
     print("Die A: %d, Die B: %d, Total = %d" % (roll[0], roll[1], total))
 
