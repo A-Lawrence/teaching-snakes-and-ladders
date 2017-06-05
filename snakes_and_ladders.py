@@ -1,6 +1,6 @@
-# Version 4
+# Version 4.1
 # This version builds on the last:
-# - Loads all of the messages displayed from a file.
+# - Added far more language entries to the file to demonstrate use.
 
 import random
 import csv
@@ -63,9 +63,9 @@ print("=" * len(messages["start"]))
 print("")
 
 while players[1] < 49 and players[2] < 49:
-    print("Player %d it's your turn!" % (turn))
-    print("Your current position is %d" % (players[turn]))
-    input("Press <ENTER> to roll!")
+    print(messages["turn"] % (turn))
+    print(messages["currentposition"] % (players[turn]))
+    input(messages["roll"])
 
     roll = rollDice()
     total = sum(roll)
@@ -74,11 +74,11 @@ while players[1] < 49 and players[2] < 49:
         print(messages["double"])
         total *= -1
 
-    print("Die A: %d, Die B: %d, Total = %d" % (roll[0], roll[1], total))
+    print(messages["rollresult"] % (roll[0], roll[1], total))
 
     advancePlayer(turn, total)
 
-    print("Your new position is %d" % (players[turn]))
+    print(messages["newposition"] % (players[turn]))
 
     nextTurn()
 
