@@ -1,13 +1,14 @@
-# Version 5.1
+# Version 6
 # This version builds on the last:
-# - Store obstacles externally
-# - Loads obstacles into the game when it starts
+# - Display the board graphically
 
 import random
 import csv
 
 FILE_MESSAGES = "nea_3_messages.csv"
 FILE_OBSTACLES = "nea_3_obstacles.csv"
+ROWS_PER_BOARD = 7
+CELLS_PER_ROW = 7
 
 messages = { "start" : "", "double" : "", "winner" : "" }
 obstacles = { 5 : -4, 11 : +4, 15 : +5, 20 : -5 }
@@ -80,6 +81,48 @@ def loadObstacles():
 
     file.close()
 
+def drawBoard():
+    
+    direction = "R"
+    for i in range(ROWS_PER_BOARD, 0, -1):
+        if direction == "L":
+            start = i * CELLS_PER_ROW
+            stop = start - CELLS_PER_ROW
+            step = -1
+            direction = "R"
+        else:
+            start = (i - 1) * CELLS_PER_ROW + 1
+            stop = start + CELLS_PER_ROW
+            step = 1
+            direction = "L"
+        
+        drawBoardRow(start, stop, step)
+        print("")
+        
+    print("")
+        
+def drawBoardRow(start, end, step):
+    for i in range(start, end, step):
+        cell = ""
+
+        if players[1] == i:
+            cell = "A"
+
+        if players[2] == i:
+            cell = cell + "B"
+            
+        if cell == "" and i < 10:
+            cell = "0" + str(i)
+        elif cell == "" and i > 9:
+            cell = str(i)
+
+        if isObstacle(i) and getObstacle(i) < 0:
+            cell = cell + "-"
+        elif isObstacle(i) and getObstacle(i) > 0:
+            cell = cell + "+"
+
+        print(cell, end="\t")
+            
 loadMessages()
 loadObstacles()
 
@@ -89,6 +132,7 @@ print("=" * len(messages["start"]))
 print("")
 
 while players[1] < 49 and players[2] < 49:
+    drawBoard()
     print(messages["turn"] % (turn))
     print(messages["currentposition"] % (players[turn]))
     input(messages["roll"])
@@ -107,6 +151,8 @@ while players[1] < 49 and players[2] < 49:
     nextTurn()
 
     print("")
+
+drawBoard() # Draw one last time to show the final places.
 
 print("=" * len(messages["winner"]))
 print(messages["winner"] % (whoWon()))
