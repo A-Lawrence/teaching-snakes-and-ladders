@@ -1,12 +1,13 @@
-# Version 5
+# Version 5.1
 # This version builds on the last:
-# - Some games have obstacles or challenges that may send you back or forward
-# - - Create a way of storing 4 obstacles (not externally)
+# - Store obstacles externally
+# - Loads obstacles into the game when it starts
 
 import random
 import csv
 
 FILE_MESSAGES = "nea_3_messages.csv"
+FILE_OBSTACLES = "nea_3_obstacles.csv"
 
 messages = { "start" : "", "double" : "", "winner" : "" }
 obstacles = { 5 : -4, 11 : +4, 15 : +5, 20 : -5 }
@@ -70,7 +71,17 @@ def loadMessages():
 
     file.close()
 
+def loadObstacles():
+    file = open(FILE_OBSTACLES, "r")
+    reader = csv.reader(file)
+
+    for row in reader:
+        obstacles[int(row[0])] = int(row[1])
+
+    file.close()
+
 loadMessages()
+loadObstacles()
 
 print("=" * len(messages["start"]))
 print(messages["start"])
