@@ -1,6 +1,7 @@
-# Version 4.1
+# Version 5
 # This version builds on the last:
-# - Added far more language entries to the file to demonstrate use.
+# - Some games have obstacles or challenges that may send you back or forward
+# - - Create a way of storing 4 obstacles (not externally)
 
 import random
 import csv
@@ -8,6 +9,7 @@ import csv
 FILE_MESSAGES = "nea_3_messages.csv"
 
 messages = { "start" : "", "double" : "", "winner" : "" }
+obstacles = { 5 : -4, 11 : +4, 15 : +5, 20 : -5 }
 players = { 1 : 1, 2 : 1 }
 turn = 1
 
@@ -25,6 +27,12 @@ def nextTurn():
     else:
         turn = 1
 
+def isObstacle(space):
+    return space in obstacles
+
+def getObstacle(space):
+    return int(obstacles[space])
+
 def advancePlayer(player, moves):
     global players
     
@@ -35,7 +43,14 @@ def advancePlayer(player, moves):
     elif newSpace > 49:
         newSpace = 49
 
-    players[player] = newSpace
+    print(messages["newposition"] % newSpace)
+
+    if isObstacle(newSpace):
+        obstacle = getObstacle(newSpace)
+        print(">>>>> " + messages["obstacle"] % (obstacle))
+        advancePlayer(player, obstacle)
+    else:
+        players[player] = newSpace
 
 def whoWon():
     if players[1] >= 49:
@@ -46,7 +61,7 @@ def whoWon():
 
     return 0
 
-def loadMessages():
+def loadMessages():   
     file = open(FILE_MESSAGES, "r")
     reader = csv.reader(file)
 
@@ -77,8 +92,6 @@ while players[1] < 49 and players[2] < 49:
     print(messages["rollresult"] % (roll[0], roll[1], total))
 
     advancePlayer(turn, total)
-
-    print(messages["newposition"] % (players[turn]))
 
     nextTurn()
 
